@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ANActionSheet
 
 class ViewController: UIViewController {
 
@@ -19,6 +20,37 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    private func showActionSheet() {
+        
+        let actionSheet = ANActionSheet(title: "Title", message: "Message!!!")
+        let action1 = ANAction(title: "First Button", style: .Default) {
+            NSLog("Tap First Button!!!")
+        }
+        action1.buttonColor = UIColor.redColor()
+        actionSheet.addAction(action1)
+        
+        let action2 = ANAction(title: "Second Button", style: .Default) {
+            NSLog("Tap Second Button!!!")
+        }
+        action2.buttonColor = UIColor.blueColor()
+        actionSheet.addAction(action2)
+        
+        let action3 = ANAction(title: "Third Button", style: .Default) {
+            NSLog("Tap Third Button!!!")
+        }
+        action3.buttonColor = UIColor.yellowColor()
+        actionSheet.addAction(action3)
+        
+        let cancelAction = ANAction(title: "Cancel", style: .Cancel)
+        cancelAction.labelColor = UIColor.redColor()
+        actionSheet.addAction(cancelAction)
+        
+        actionSheet.show()
+    }
 
+    @IBAction func onTouchDownShowButton(sender: AnyObject) {
+        showActionSheet()
+    }
 }
 
