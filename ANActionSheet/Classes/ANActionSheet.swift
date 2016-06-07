@@ -22,8 +22,8 @@ final public class ANActionSheet: UIView {
     private let messageHeight: CGFloat = 40.0
     private let displaySize = UIScreen.mainScreen().bounds.size
     
-    private var titleLabel = UILabel()
-    private var messageLabel = UILabel()
+    private var titleLabel = ANLabel()
+    private var messageLabel = ANLabel()
     private var actions = [ANAction]()
     private var sheetViewMoveY: CGFloat = 0.0
     
@@ -36,6 +36,7 @@ final public class ANActionSheet: UIView {
         
         titleLabel.text = title
         messageLabel.text = message
+        messageLabel.type = .Message
         
         self.frame = UIScreen.mainScreen().bounds
         self.backgroundColor  = UIColor(white: 0, alpha: 0.25)

@@ -2,8 +2,8 @@
 //  ANActionSheetAction.swift
 //  Pods
 //
-//  Created by Ayumu Nohira on 2016/06/05.
-//  Copyright © 2016 Ayumu Nohira. All rights reserved.
+//  Created by nohirap on 2016/06/05.
+//  Copyright © 2016 nohirap. All rights reserved.
 //
 
 import UIKit
@@ -30,6 +30,8 @@ final public class ANAction: UIButton {
     
     private var handler: (() -> Void)?
     
+    private let fontSize: CGFloat = 18
+    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -39,6 +41,7 @@ final public class ANAction: UIButton {
         
         self.setTitle(title, forState: .Normal)
         self.setTitleColor(labelColor, forState: .Normal)
+        self.titleLabel?.font = UIFont.boldSystemFontOfSize(fontSize)
         self.backgroundColor = buttonColor
         self.style = style
         self.handler = handler
