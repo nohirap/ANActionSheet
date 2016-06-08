@@ -43,6 +43,11 @@ final public class ANAction: UIButton {
         self.setTitleColor(labelColor, forState: .Normal)
         self.titleLabel?.font = UIFont.boldSystemFontOfSize(fontSize)
         self.backgroundColor = buttonColor
+        self.titleLabel?.lineBreakMode = .ByTruncatingTail
+        if style == .Cancel {
+            self.layer.cornerRadius = 6.0
+            self.layer.masksToBounds = true
+        }
         self.style = style
         self.handler = handler
         self.addTarget(self, action:#selector(ANAction.tappedButton(_:)), forControlEvents: .TouchUpInside)

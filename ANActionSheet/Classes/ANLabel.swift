@@ -15,9 +15,18 @@ enum ANLabelType {
     func font() -> UIFont {
         switch self {
         case .Title:
-            return UIFont.systemFontOfSize(12)
+            return UIFont.boldSystemFontOfSize(16)
         default:
-            return UIFont.systemFontOfSize(10)
+            return UIFont.systemFontOfSize(16)
+        }
+    }
+    
+    func numberOfLines() -> Int {
+        switch self {
+        case .Title:
+            return 1
+        default:
+            return 0
         }
     }
 }
@@ -27,6 +36,7 @@ class ANLabel: UILabel {
     var type: ANLabelType = .Title {
         didSet {
             self.font = type.font()
+            self.numberOfLines = type.numberOfLines()
         }
     }
     var color = UIColor.grayColor() {

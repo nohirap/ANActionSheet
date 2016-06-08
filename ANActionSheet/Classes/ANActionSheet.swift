@@ -19,7 +19,7 @@ final public class ANActionSheet: UIView {
     private let mergin: CGFloat = 5.0
     private let borderLine: CGFloat = 1.0
     private let titleHeight: CGFloat = 40.0
-    private let messageHeight: CGFloat = 40.0
+    private let messageHeight: CGFloat = 60.0
     private let displaySize = UIScreen.mainScreen().bounds.size
     
     private var titleLabel = ANLabel()
@@ -90,19 +90,48 @@ final public class ANActionSheet: UIView {
         }
         if titleViewHeight > 0 {
             titleView.frame = CGRectMake(mergin, 0, buttonSize.width, titleViewHeight)
+            let maskPath = UIBezierPath(roundedRect: titleView.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(6.0, 6.0))
+            let maskLayer = CAShapeLayer()
+            maskLayer.path = maskPath.CGPath
+            titleView.layer.mask = maskLayer
             sheetView.addSubview(titleView)
         }
         
+        var firstAction: ANAction!
+        var lastAction: ANAction!
         for action in actions {
             if action.style == .Cancel {
                 action.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height)
                 cancelView = UIView()
                 cancelView?.addSubview(action)
             } else {
+                if actionCount > 6 {
+                    continue
+                }
                 action.frame = CGRectMake(0, (buttonSize.height + borderLine) * CGFloat(actionCount), buttonSize.width, buttonSize.height)
                 defaultsView.addSubview(action)
+                if firstAction == nil {
+                    firstAction = action
+                }
+                lastAction = action
                 actionCount += 1
             }
+        }
+    
+        if titleViewHeight == 0 && actionCount > 1 {
+            let maskPath = UIBezierPath(roundedRect: firstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(6.0, 6.0))
+            let maskLayer = CAShapeLayer()
+            maskLayer.path = maskPath.CGPath
+            firstAction.layer.mask = maskLayer
+        }
+        if actionCount == 1 {
+            lastAction.layer.cornerRadius = 6.0
+            lastAction.layer.masksToBounds = true
+        } else {
+            let maskPath = UIBezierPath(roundedRect: lastAction.bounds, byRoundingCorners: [UIRectCorner.BottomLeft, UIRectCorner.BottomRight], cornerRadii:CGSizeMake(6.0, 6.0))
+            let maskLayer = CAShapeLayer()
+            maskLayer.path = maskPath.CGPath
+            lastAction.layer.mask = maskLayer
         }
         
         var frameHeight = (buttonSize.height + borderLine) * CGFloat(actionCount)
