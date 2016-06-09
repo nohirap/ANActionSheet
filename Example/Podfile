@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'ANActionSheet_Example' do
+  pod 'ANActionSheet', :path => '../'
+end
