@@ -109,16 +109,18 @@ final public class ANActionSheet: UIView {
         }
         
         // Setting corners
-        if headerHeight == 0 && actionCount > 1 {
-            let maskPath = UIBezierPath(roundedRect: firstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(6.0, 6.0))
-            let maskLayer = CAShapeLayer()
-            maskLayer.path = maskPath.CGPath
-            firstAction.layer.mask = maskLayer
+        if headerHeight == 0 {
+            if actionCount > 1 {
+                let maskPath = UIBezierPath(roundedRect: firstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(6.0, 6.0))
+                let maskLayer = CAShapeLayer()
+                maskLayer.path = maskPath.CGPath
+                firstAction.layer.mask = maskLayer
+            } else {
+                lastAction.layer.cornerRadius = 6.0
+                lastAction.layer.masksToBounds = true
+            }
         }
-        if actionCount == 1 {
-            lastAction.layer.cornerRadius = 6.0
-            lastAction.layer.masksToBounds = true
-        } else {
+        if headerHeight > 0 || actionCount > 1 {
             let maskPath = UIBezierPath(roundedRect: lastAction.bounds, byRoundingCorners: [UIRectCorner.BottomLeft, UIRectCorner.BottomRight], cornerRadii:CGSizeMake(6.0, 6.0))
             let maskLayer = CAShapeLayer()
             maskLayer.path = maskPath.CGPath
