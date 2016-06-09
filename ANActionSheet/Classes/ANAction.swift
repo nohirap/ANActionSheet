@@ -44,7 +44,7 @@ final public class ANAction: UIButton {
     private func setupAction(title: String, style: ANActionSheetStyle, handler: (() -> Void)?) {
         self.setTitle(title, forState: .Normal)
         self.setTitleColor(labelColor, forState: .Normal)
-        self.titleLabel?.font = UIFont.boldSystemFontOfSize(fontSize)
+        self.titleLabel?.font = UIFont.systemFontOfSize(fontSize)
         self.backgroundColor = buttonColor
         self.titleLabel?.lineBreakMode = .ByTruncatingTail
         self.style = style
