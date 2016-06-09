@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ANHeaderView: UIView {
+internal final class ANHeaderView: UIView {
     private let titleHeight: CGFloat = 40.0
     private let messageHeight: CGFloat = 60.0
     var height: CGFloat = 0.0

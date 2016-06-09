@@ -40,7 +40,7 @@ enum ANLabelType {
     }
 }
 
-class ANLabel: UILabel {
+internal final class ANLabel: UILabel {
     
     var type: ANLabelType = .Title {
         didSet {

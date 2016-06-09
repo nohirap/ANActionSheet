@@ -6,9 +6,7 @@
 //  Copyright © 2016 nohirap. All rights reserved.
 //
 
-import UIKit
-
-extension UIScreen {
+internal extension UIScreen {
     
     class func width() -> CGFloat {
         return UIScreen.mainScreen().bounds.size.width
