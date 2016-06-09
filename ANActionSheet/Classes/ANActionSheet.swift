@@ -16,16 +16,12 @@ public enum ANActionSheetStyle {
 final public class ANActionSheet: UIView {
     
     private let sheetView = UIView()
-    private let mergin: CGFloat = 5.0
     private let borderLine: CGFloat = 1.0
-    private let titleHeight: CGFloat = 40.0
-    private let messageHeight: CGFloat = 60.0
-    private let displaySize = UIScreen.mainScreen().bounds.size
     
-    private var titleLabel = ANLabel()
-    private var messageLabel = ANLabel()
     private var actions = [ANAction]()
     private var sheetViewMoveY: CGFloat = 0.0
+    private var titleText = ""
+    private var messageText = ""
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -34,9 +30,8 @@ final public class ANActionSheet: UIView {
     public init(title: String = "", message: String = "") {
         super.init(frame: CGRectZero)
         
-        titleLabel.text = title
-        messageLabel.text = message
-        messageLabel.type = .Message
+        titleText = title
+        messageText = message
         
         self.frame = UIScreen.mainScreen().bounds
         self.backgroundColor  = UIColor(white: 0, alpha: 0.25)
@@ -49,13 +44,10 @@ final public class ANActionSheet: UIView {
     }
     
     public func show() {
-        
         let viewTag = 100
-        
         for subview in self.subviews {
             subview.removeFromSuperview()
         }
-        
         if let keyWindow = UIApplication.sharedApplication().keyWindow {
             if keyWindow.viewWithTag(viewTag) == nil {
                 self.tag = viewTag
@@ -69,46 +61,44 @@ final public class ANActionSheet: UIView {
             return
         }
         
-        let titleView = UIView()
-        let defaultsView = UIView()
-        let buttonSize = CGSizeMake(displaySize.width - (mergin * 2), 50)
+        let headerView = ANHeaderView(title: titleText, message: messageText)
+        if headerView.height > 0 {
+            sheetView.addSubview(headerView)
+        }
         
+        let frameHeight = createButtonsView(headerView.height)
+        
+        sheetView.frame = CGRectMake(0, UIScreen.height(), UIScreen.buttonWidth(), headerView.height + frameHeight)
+        self.addSubview(sheetView)
+        
+        UIView.animateWithDuration(0.5) {
+            self.sheetView.frame = CGRectOffset(self.sheetView.frame, 0, -self.sheetViewMoveY)
+        }
+    }
+    
+    private func createButtonsView(headerHeight: CGFloat) -> CGFloat {
+        let defaultsView = UIView()
         var cancelView: UIView?
         var actionCount = 0
-        var titleViewHeight: CGFloat = 0.0
-        
-        titleView.backgroundColor = UIColor.whiteColor()
-        if !titleLabel.text!.isEmpty {
-            titleLabel.frame = CGRectMake(0, 0, buttonSize.width, titleHeight)
-            titleViewHeight += titleHeight
-            titleView.addSubview(titleLabel)
-        }
-        if !messageLabel.text!.isEmpty {
-            messageLabel.frame = CGRectMake(0, titleViewHeight, buttonSize.width, messageHeight)
-            titleViewHeight += messageHeight
-            titleView.addSubview(messageLabel)
-        }
-        if titleViewHeight > 0 {
-            titleView.frame = CGRectMake(mergin, 0, buttonSize.width, titleViewHeight)
-            let maskPath = UIBezierPath(roundedRect: titleView.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(6.0, 6.0))
-            let maskLayer = CAShapeLayer()
-            maskLayer.path = maskPath.CGPath
-            titleView.layer.mask = maskLayer
-            sheetView.addSubview(titleView)
-        }
-        
         var firstAction: ANAction!
         var lastAction: ANAction!
+        
+        // Setting buttons
         for action in actions {
             if action.style == .Cancel {
-                action.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height)
+                if let _ = cancelView {
+                    // Cancel button only one.
+                    continue
+                }
+                action.frame = CGRectMake(0, 0, UIScreen.buttonWidth(), UIScreen.buttonHeight())
                 cancelView = UIView()
                 cancelView?.addSubview(action)
             } else {
                 if actionCount > 6 {
+                    // Default button rimit 7.
                     continue
                 }
-                action.frame = CGRectMake(0, (buttonSize.height + borderLine) * CGFloat(actionCount), buttonSize.width, buttonSize.height)
+                action.frame = CGRectMake(0, (UIScreen.buttonHeight() + borderLine) * CGFloat(actionCount), UIScreen.buttonWidth(), UIScreen.buttonHeight())
                 defaultsView.addSubview(action)
                 if firstAction == nil {
                     firstAction = action
@@ -117,8 +107,9 @@ final public class ANActionSheet: UIView {
                 actionCount += 1
             }
         }
-    
-        if titleViewHeight == 0 && actionCount > 1 {
+        
+        // Setting corners
+        if headerHeight == 0 && actionCount > 1 {
             let maskPath = UIBezierPath(roundedRect: firstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(6.0, 6.0))
             let maskLayer = CAShapeLayer()
             maskLayer.path = maskPath.CGPath
@@ -134,24 +125,22 @@ final public class ANActionSheet: UIView {
             lastAction.layer.mask = maskLayer
         }
         
-        var frameHeight = (buttonSize.height + borderLine) * CGFloat(actionCount)
-        defaultsView.frame = CGRectMake(mergin, titleViewHeight, buttonSize.width, frameHeight)
+        // Setting views frame
+        var frameHeight = (UIScreen.buttonHeight() + borderLine) * CGFloat(actionCount)
+        defaultsView.frame = CGRectMake(UIScreen.mergin(), headerHeight, UIScreen.buttonWidth(), frameHeight)
         if let cancelView = cancelView {
-            cancelView.frame = CGRectMake(mergin, titleViewHeight + frameHeight + mergin, buttonSize.width, buttonSize.height)
-            frameHeight += mergin + buttonSize.height
+            cancelView.frame = CGRectMake(UIScreen.mergin(), headerHeight + frameHeight + UIScreen.mergin(), UIScreen.buttonWidth(), UIScreen.buttonHeight())
+            frameHeight += UIScreen.mergin() + UIScreen.buttonHeight()
         }
-        sheetViewMoveY = titleViewHeight + frameHeight + mergin
-        
-        sheetView.frame = CGRectMake(0, displaySize.height, buttonSize.width, titleViewHeight + frameHeight)
         
         sheetView.addSubview(defaultsView)
         if let cancelView = cancelView {
             sheetView.addSubview(cancelView)
         }
-        self.addSubview(sheetView)
-        UIView.animateWithDuration(0.5) {
-            self.sheetView.frame = CGRectOffset(self.sheetView.frame, 0, -self.sheetViewMoveY)
-        }
+        
+        sheetViewMoveY = headerHeight + frameHeight + UIScreen.mergin()
+        
+        return frameHeight
     }
 
 }

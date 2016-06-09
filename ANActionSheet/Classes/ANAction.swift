@@ -38,17 +38,20 @@ final public class ANAction: UIButton {
     
     public init(title: String, style: ANActionSheetStyle = .Default, handler: (() -> Void)? = nil) {
         super.init(frame: CGRectZero)
-        
+        setupAction(title, style: style, handler: handler)
+    }
+    
+    private func setupAction(title: String, style: ANActionSheetStyle, handler: (() -> Void)?) {
         self.setTitle(title, forState: .Normal)
         self.setTitleColor(labelColor, forState: .Normal)
         self.titleLabel?.font = UIFont.boldSystemFontOfSize(fontSize)
         self.backgroundColor = buttonColor
         self.titleLabel?.lineBreakMode = .ByTruncatingTail
+        self.style = style
         if style == .Cancel {
             self.layer.cornerRadius = 6.0
             self.layer.masksToBounds = true
         }
-        self.style = style
         self.handler = handler
         self.addTarget(self, action:#selector(ANAction.tappedButton(_:)), forControlEvents: .TouchUpInside)
     }
