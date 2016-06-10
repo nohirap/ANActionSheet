@@ -20,6 +20,37 @@ it, simply add the following line to your Podfile:
 pod "ANActionSheet"
 ```
 
+## Usage
+
+Import ANActionSheet then use the following codes when you want to show the view.
+
+```ruby
+let actionSheet = ANActionSheet(title: "Title", message: "Message!!!")
+let action1 = ANAction(title: "First Button", style: .Default) {
+    NSLog("Tap First Button!!!")
+}
+action1.buttonColor = UIColor.redColor()
+actionSheet.addAction(action1)
+        
+let action2 = ANAction(title: "Second Button", style: .Default) {
+    NSLog("Tap Second Button!!!")
+}
+action2.buttonColor = UIColor.blueColor()
+actionSheet.addAction(action2)
+        
+let action3 = ANAction(title: "Third Button", style: .Default) {
+    NSLog("Tap Third Button!!!")
+}
+action3.buttonColor = UIColor.yellowColor()
+actionSheet.addAction(action3)
+        
+let cancelAction = ANAction(title: "Cancel", style: .Cancel)
+cancelAction.labelColor = UIColor.redColor()
+actionSheet.addAction(cancelAction)
+        
+actionSheet.show()
+```
+
 ## Author
 
 nohirap, zepchan@gmail.com

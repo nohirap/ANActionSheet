@@ -24,6 +24,10 @@ class ViewController: UIViewController {
     private func showActionSheet() {
         
         let actionSheet = ANActionSheet(title: "Title", message: "Message!!!")
+        actionSheet.headerBackgroundColor = UIColor.blackColor()
+        actionSheet.titleColor = UIColor.redColor()
+        actionSheet.messageColor = UIColor.greenColor()
+        actionSheet.buttonsBorderColor = UIColor.blackColor()
         let action1 = ANAction(title: "First Button", style: .Default) {
             NSLog("Tap First Button!!!")
         }
@@ -34,6 +38,7 @@ class ViewController: UIViewController {
             NSLog("Tap Second Button!!!")
         }
         action2.buttonColor = UIColor.blueColor()
+        action2.labelColor = UIColor.greenColor()
         actionSheet.addAction(action2)
         
         let action3 = ANAction(title: "Third Button", style: .Default) {

@@ -8,20 +8,22 @@
 
 import UIKit
 
-public enum ANActionSheetStyle {
-    case Default
-    case Cancel
-}
-
 final public class ANActionSheet: UIView {
     
     private let sheetView = UIView()
     private let borderLine: CGFloat = 1.0
+    private let cornerRadius: CGFloat = 6.0
+    private let animateDuration = 0.5
     
     private var actions = [ANAction]()
     private var sheetViewMoveY: CGFloat = 0.0
     private var titleText = ""
     private var messageText = ""
+    
+    public var headerBackgroundColor = UIColor.defaultBackgroundColor()
+    public var titleColor = UIColor.defaultTextColor()
+    public var messageColor = UIColor.defaultTextColor()
+    public var buttonsBorderColor = UIColor.defaultButtonsBorderColor()
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -44,7 +46,11 @@ final public class ANActionSheet: UIView {
     }
     
     public func show() {
-        let viewTag = 100
+        if actions.count == 0 {
+            return
+        }
+        
+        let viewTag = 1000
         for subview in self.subviews {
             subview.removeFromSuperview()
         }
@@ -57,11 +63,7 @@ final public class ANActionSheet: UIView {
             return
         }
         
-        if actions.count == 0 {
-            return
-        }
-        
-        let headerView = ANHeaderView(title: titleText, message: messageText)
+        let headerView = ANHeaderView(model: setupHeaderViewModel())
         if headerView.height > 0 {
             sheetView.addSubview(headerView)
         }
@@ -71,9 +73,19 @@ final public class ANActionSheet: UIView {
         sheetView.frame = CGRectMake(0, UIScreen.height(), UIScreen.buttonWidth(), headerView.height + frameHeight)
         self.addSubview(sheetView)
         
-        UIView.animateWithDuration(0.5) {
+        UIView.animateWithDuration(animateDuration) {
             self.sheetView.frame = CGRectOffset(self.sheetView.frame, 0, -self.sheetViewMoveY)
         }
+    }
+    
+    private func setupHeaderViewModel() -> ANHeaderViewModel {
+        var headerViewModel = ANHeaderViewModel()
+        headerViewModel.title = titleText
+        headerViewModel.message = messageText
+        headerViewModel.headerBackgroundColor = headerBackgroundColor
+        headerViewModel.titleColor = titleColor
+        headerViewModel.messageColor = messageColor
+        return headerViewModel
     }
     
     private func createButtonsView(headerHeight: CGFloat) -> CGFloat {
@@ -98,11 +110,19 @@ final public class ANActionSheet: UIView {
                     // Default button rimit 7.
                     continue
                 }
-                action.frame = CGRectMake(0, (UIScreen.buttonHeight() + borderLine) * CGFloat(actionCount), UIScreen.buttonWidth(), UIScreen.buttonHeight())
-                defaultsView.addSubview(action)
+                
+                let y = (UIScreen.buttonHeight() + borderLine) * CGFloat(actionCount)
+                
                 if firstAction == nil {
                     firstAction = action
+                } else {
+                    let border = UIView()
+                    border.frame = CGRectMake(0, y - borderLine, UIScreen.buttonWidth(), borderLine)
+                    border.backgroundColor = buttonsBorderColor
+                    defaultsView.addSubview(border)
                 }
+                action.frame = CGRectMake(0, y, UIScreen.buttonWidth(), UIScreen.buttonHeight())
+                defaultsView.addSubview(action)
                 lastAction = action
                 actionCount += 1
             }
@@ -111,17 +131,17 @@ final public class ANActionSheet: UIView {
         // Setting corners
         if headerHeight == 0 {
             if actionCount > 1 {
-                let maskPath = UIBezierPath(roundedRect: firstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(6.0, 6.0))
+                let maskPath = UIBezierPath(roundedRect: firstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(cornerRadius, cornerRadius))
                 let maskLayer = CAShapeLayer()
                 maskLayer.path = maskPath.CGPath
                 firstAction.layer.mask = maskLayer
             } else {
-                lastAction.layer.cornerRadius = 6.0
+                lastAction.layer.cornerRadius = cornerRadius
                 lastAction.layer.masksToBounds = true
             }
         }
         if headerHeight > 0 || actionCount > 1 {
-            let maskPath = UIBezierPath(roundedRect: lastAction.bounds, byRoundingCorners: [UIRectCorner.BottomLeft, UIRectCorner.BottomRight], cornerRadii:CGSizeMake(6.0, 6.0))
+            let maskPath = UIBezierPath(roundedRect: lastAction.bounds, byRoundingCorners: [UIRectCorner.BottomLeft, UIRectCorner.BottomRight], cornerRadii:CGSizeMake(cornerRadius, cornerRadius))
             let maskLayer = CAShapeLayer()
             maskLayer.path = maskPath.CGPath
             lastAction.layer.mask = maskLayer
@@ -150,7 +170,7 @@ final public class ANActionSheet: UIView {
 // MARK: - ANActionSheetOutPut
 extension ANActionSheet: ANActionSheetOutPut {
     func dismiss() {
-        UIView.animateWithDuration(0.5, delay: 0.0, options: .CurveEaseOut, animations: {
+        UIView.animateWithDuration(animateDuration, delay: 0.0, options: .CurveEaseOut, animations: {
             self.sheetView.frame = CGRectOffset(self.sheetView.frame , 0, self.sheetViewMoveY)
         }, completion: { (finished) in
             self.removeFromSuperview()
