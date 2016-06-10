@@ -21,15 +21,6 @@ enum ANLabelType {
         }
     }
     
-    func color() -> UIColor {
-        switch self {
-        case .Title:
-            return UIColor.grayColor()
-        default:
-            return UIColor.grayColor()
-        }
-    }
-    
     func numberOfLines() -> Int {
         switch self {
         case .Title:
@@ -45,8 +36,13 @@ internal final class ANLabel: UILabel {
     var type: ANLabelType = .Title {
         didSet {
             self.font = type.font()
-            self.textColor = type.color()
             self.numberOfLines = type.numberOfLines()
+        }
+    }
+    
+    var color = UIColor.defaultTextColor() {
+        didSet {
+            self.textColor = color
         }
     }
 
