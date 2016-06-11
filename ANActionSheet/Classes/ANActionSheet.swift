@@ -116,9 +116,10 @@ final public class ANActionSheet: UIView {
                     firstAction = action
                 } else {
                     let border = UIView()
-                    border.frame = CGRectMake(0, buttonsY - borderLine, UIScreen.buttonWidth(), borderLine)
+                    border.frame = CGRectMake(0, buttonsY, UIScreen.buttonWidth(), borderLine)
                     border.backgroundColor = buttonsBorderColor
                     defaultsView.addSubview(border)
+                    buttonsY += borderLine
                 }
                 buttonsY += action.setupFrame(buttonsY)
                 defaultsView.addSubview(action)
