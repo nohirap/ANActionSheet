@@ -17,24 +17,26 @@ internal final class ANHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(title: String, message: String) {
+    public init(model: ANHeaderViewModel) {
         super.init(frame: CGRectZero)
-        setupHeaderView(title, message: message)
+        setupHeaderView(model)
     }
     
-    private func setupHeaderView(title: String, message: String) {
-        if !title.isEmpty {
+    private func setupHeaderView(model: ANHeaderViewModel) {
+        if !model.title.isEmpty {
             let titleLabel = ANLabel()
             titleLabel.type = .Title
-            titleLabel.text = title
+            titleLabel.color = model.titleColor
+            titleLabel.text = model.title
             titleLabel.frame = CGRectMake(0, 0, UIScreen.buttonWidth(), titleHeight)
             height += titleHeight
             self.addSubview(titleLabel)
         }
-        if !message.isEmpty {
+        if !model.message.isEmpty {
             let messageLabel = ANLabel()
             messageLabel.type = .Message
-            messageLabel.text = message
+            messageLabel.color = model.messageColor
+            messageLabel.text = model.message
             messageLabel.frame = CGRectMake(0, height, UIScreen.buttonWidth(), messageHeight)
             height += messageHeight
             self.addSubview(messageLabel)
@@ -46,7 +48,7 @@ internal final class ANHeaderView: UIView {
             let maskLayer = CAShapeLayer()
             maskLayer.path = maskPath.CGPath
             self.layer.mask = maskLayer
-            self.backgroundColor = UIColor.whiteColor()
+            self.backgroundColor = model.headerBackgroundColor
         }
     }
 
