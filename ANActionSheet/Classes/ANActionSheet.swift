@@ -46,7 +46,7 @@ final public class ANActionSheet: UIView {
     }
     
     public func show() {
-        if actions.count == 0 {
+        if notExistDefaultButton() {
             return
         }
         
@@ -78,6 +78,10 @@ final public class ANActionSheet: UIView {
         }
     }
     
+    private func notExistDefaultButton() -> Bool {
+        return actions.filter{$0.style.isDefault}.count == 0
+    }
+    
     private func setupHeaderViewModel() -> ANHeaderViewModel {
         var headerViewModel = ANHeaderViewModel()
         headerViewModel.title = titleText
@@ -92,8 +96,8 @@ final public class ANActionSheet: UIView {
         let defaultsView = UIView()
         var cancelView: UIView?
         var actionCount = 0
-        var firstAction: ANAction!
-        var lastAction: ANAction!
+        var firstAction: ANAction?
+        var lastAction: ANAction?
         
         // Setting buttons
         var buttonsY: CGFloat = 0.0
@@ -128,23 +132,27 @@ final public class ANActionSheet: UIView {
             }
         }
         
+        guard let openedFirstAction = firstAction, openedLastAction = lastAction else {
+            return 0
+        }
+        
         // Setting corners
         if headerHeight == 0 {
             if actionCount > 1 {
-                let maskPath = UIBezierPath(roundedRect: firstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(cornerRadius, cornerRadius))
+                let maskPath = UIBezierPath(roundedRect: openedFirstAction.bounds, byRoundingCorners: [UIRectCorner.TopLeft, UIRectCorner.TopRight], cornerRadii:CGSizeMake(cornerRadius, cornerRadius))
                 let maskLayer = CAShapeLayer()
                 maskLayer.path = maskPath.CGPath
-                firstAction.layer.mask = maskLayer
+                openedFirstAction.layer.mask = maskLayer
             } else {
-                lastAction.layer.cornerRadius = cornerRadius
-                lastAction.layer.masksToBounds = true
+                openedLastAction.layer.cornerRadius = cornerRadius
+                openedLastAction.layer.masksToBounds = true
             }
         }
         if headerHeight > 0 || actionCount > 1 {
-            let maskPath = UIBezierPath(roundedRect: lastAction.bounds, byRoundingCorners: [UIRectCorner.BottomLeft, UIRectCorner.BottomRight], cornerRadii:CGSizeMake(cornerRadius, cornerRadius))
+            let maskPath = UIBezierPath(roundedRect: openedLastAction.bounds, byRoundingCorners: [UIRectCorner.BottomLeft, UIRectCorner.BottomRight], cornerRadii:CGSizeMake(cornerRadius, cornerRadius))
             let maskLayer = CAShapeLayer()
             maskLayer.path = maskPath.CGPath
-            lastAction.layer.mask = maskLayer
+            openedLastAction.layer.mask = maskLayer
         }
         
         // Setting views frame
