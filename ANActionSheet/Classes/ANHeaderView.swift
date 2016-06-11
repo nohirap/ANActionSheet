@@ -35,7 +35,7 @@ internal final class ANHeaderView: UIView {
         if !model.message.isEmpty {
             let messageLabel = ANLabel()
             messageLabel.type = .Message
-            messageLabel.color = model.titleColor
+            messageLabel.color = model.messageColor
             messageLabel.text = model.message
             messageLabel.frame = CGRectMake(0, height, UIScreen.buttonWidth(), messageHeight)
             height += messageHeight

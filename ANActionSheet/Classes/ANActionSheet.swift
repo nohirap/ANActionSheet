@@ -96,13 +96,14 @@ final public class ANActionSheet: UIView {
         var lastAction: ANAction!
         
         // Setting buttons
+        var buttonsY: CGFloat = 0.0
         for action in actions {
             if action.style == .Cancel {
                 if let _ = cancelView {
                     // Cancel button only one.
                     continue
                 }
-                action.frame = CGRectMake(0, 0, UIScreen.buttonWidth(), UIScreen.buttonHeight())
+                action.setupFrame(0)
                 cancelView = UIView()
                 cancelView?.addSubview(action)
             } else {
@@ -111,17 +112,15 @@ final public class ANActionSheet: UIView {
                     continue
                 }
                 
-                let y = (UIScreen.buttonHeight() + borderLine) * CGFloat(actionCount)
-                
                 if firstAction == nil {
                     firstAction = action
                 } else {
                     let border = UIView()
-                    border.frame = CGRectMake(0, y - borderLine, UIScreen.buttonWidth(), borderLine)
+                    border.frame = CGRectMake(0, buttonsY - borderLine, UIScreen.buttonWidth(), borderLine)
                     border.backgroundColor = buttonsBorderColor
                     defaultsView.addSubview(border)
                 }
-                action.frame = CGRectMake(0, y, UIScreen.buttonWidth(), UIScreen.buttonHeight())
+                buttonsY += action.setupFrame(buttonsY)
                 defaultsView.addSubview(action)
                 lastAction = action
                 actionCount += 1
@@ -148,7 +147,7 @@ final public class ANActionSheet: UIView {
         }
         
         // Setting views frame
-        var frameHeight = (UIScreen.buttonHeight() + borderLine) * CGFloat(actionCount)
+        var frameHeight = buttonsY
         defaultsView.frame = CGRectMake(UIScreen.mergin(), headerHeight, UIScreen.buttonWidth(), frameHeight)
         if let cancelView = cancelView {
             cancelView.frame = CGRectMake(UIScreen.mergin(), headerHeight + frameHeight + UIScreen.mergin(), UIScreen.buttonWidth(), UIScreen.buttonHeight())
