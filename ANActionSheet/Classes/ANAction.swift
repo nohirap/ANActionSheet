@@ -11,6 +11,13 @@ import UIKit
 public enum ANActionStyle {
     case Default
     case Cancel
+    
+    var isDefault: Bool {
+        if self == .Default {
+            return true
+        }
+        return false
+    }
 }
 
 protocol ANActionSheetOutPut {
