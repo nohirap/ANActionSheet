@@ -5,6 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/ANActionSheet.svg?style=flat)](http://cocoapods.org/pods/ANActionSheet)
 [![Platform](https://img.shields.io/cocoapods/p/ANActionSheet.svg?style=flat)](http://cocoapods.org/pods/ANActionSheet)
 
+## Screen Shot
+
+![image_alt_text](https://www.dropbox.com/s/9280n24lb3yrp73/ANActionSheetScreenShot.png?raw=true)
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
