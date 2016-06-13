@@ -8,6 +8,10 @@
 
 import UIKit
 
+public protocol ANActionSheetDelegate {
+    func anActionSheet(actionSheet: ANActionSheet, clickedButtonAtIndex buttonIndex: Int)
+}
+
 final public class ANActionSheet: UIView {
     
     private let sheetView = UIView()
@@ -15,6 +19,7 @@ final public class ANActionSheet: UIView {
     private let cornerRadius: CGFloat = 6.0
     private let animateDuration = 0.5
     
+    private var delegate: ANActionSheetDelegate?
     private var actions = [ANAction]()
     private var sheetViewMoveY: CGFloat = 0.0
     private var titleText = ""
@@ -29,15 +34,15 @@ final public class ANActionSheet: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(title: String = "", message: String = "") {
+    public init(title: String = "", message: String = "", delegate: ANActionSheetDelegate? = nil) {
         super.init(frame: CGRectZero)
         
         titleText = title
         messageText = message
+        self.delegate = delegate
         
         self.frame = UIScreen.mainScreen().bounds
         self.backgroundColor  = UIColor(white: 0, alpha: 0.25)
-        
     }
     
     public func addAction(action: ANAction) {
@@ -76,6 +81,14 @@ final public class ANActionSheet: UIView {
         UIView.animateWithDuration(animateDuration) {
             self.sheetView.frame = CGRectOffset(self.sheetView.frame, 0, -self.sheetViewMoveY)
         }
+    }
+    
+    public func dismiss() {
+        UIView.animateWithDuration(animateDuration, delay: 0.0, options: .CurveEaseOut, animations: {
+            self.sheetView.frame = CGRectOffset(self.sheetView.frame , 0, self.sheetViewMoveY)
+        }, completion: { (finished) in
+            self.removeFromSuperview()
+        })
     }
     
     private func notExistDefaultButton() -> Bool {
@@ -126,6 +139,7 @@ final public class ANActionSheet: UIView {
                     buttonsY += borderLine
                 }
                 buttonsY += action.setupFrame(buttonsY)
+                action.index = actionCount
                 defaultsView.addSubview(action)
                 lastAction = action
                 actionCount += 1
@@ -158,30 +172,27 @@ final public class ANActionSheet: UIView {
         // Setting views frame
         var frameHeight = buttonsY
         defaultsView.frame = CGRectMake(UIScreen.mergin(), headerHeight, UIScreen.buttonWidth(), frameHeight)
-        if let cancelView = cancelView {
-            cancelView.frame = CGRectMake(UIScreen.mergin(), headerHeight + frameHeight + UIScreen.mergin(), UIScreen.buttonWidth(), UIScreen.buttonHeight())
-            frameHeight += UIScreen.mergin() + UIScreen.buttonHeight()
-        }
-        
         sheetView.addSubview(defaultsView)
         if let cancelView = cancelView {
+            cancelView.frame = CGRectMake(UIScreen.mergin(), headerHeight + frameHeight + UIScreen.mergin(), UIScreen.buttonWidth(), UIScreen.buttonHeight())
             sheetView.addSubview(cancelView)
+            frameHeight += UIScreen.mergin() + UIScreen.buttonHeight()
         }
         
         sheetViewMoveY = headerHeight + frameHeight + UIScreen.mergin()
         
         return frameHeight
     }
-
 }
 
-// MARK: - ANActionSheetOutPut
-extension ANActionSheet: ANActionSheetOutPut {
-    func dismiss() {
-        UIView.animateWithDuration(animateDuration, delay: 0.0, options: .CurveEaseOut, animations: {
-            self.sheetView.frame = CGRectOffset(self.sheetView.frame , 0, self.sheetViewMoveY)
-        }, completion: { (finished) in
-            self.removeFromSuperview()
-        })
+// MARK: - ANActionOutPut
+extension ANActionSheet: ANActionOutPut {
+    func tappedButton(buttonIndex: Int) {
+        guard let delegate = delegate else {
+            dismiss()
+            return
+        }
+        
+        delegate.anActionSheet(self, clickedButtonAtIndex: buttonIndex)
     }
 }

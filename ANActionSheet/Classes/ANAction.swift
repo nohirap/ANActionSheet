@@ -20,13 +20,14 @@ public enum ANActionStyle {
     }
 }
 
-protocol ANActionSheetOutPut {
-    func dismiss()
+protocol ANActionOutPut {
+    func tappedButton(buttonIndex: Int)
 }
 
 final public class ANAction: UIButton {
     
-    var output: ANActionSheetOutPut?
+    var output: ANActionOutPut?
+    var index = 0
     var style: ANActionStyle = .Default {
         didSet {
             if style == .Cancel {
@@ -112,7 +113,7 @@ final public class ANAction: UIButton {
         if let handler = handler {
             handler()
         }
-        output?.dismiss()
+        output?.tappedButton(index)
     }
 
 }
