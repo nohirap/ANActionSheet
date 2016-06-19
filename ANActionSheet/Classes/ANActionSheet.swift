@@ -8,8 +8,9 @@
 
 import UIKit
 
-public protocol ANActionSheetDelegate {
+@objc public protocol ANActionSheetDelegate {
     func anActionSheet(actionSheet: ANActionSheet, clickedButtonAtIndex buttonIndex: Int)
+    optional func anActionSheetCancel(actionSheet: ANActionSheet)
 }
 
 final public class ANActionSheet: UIView {
@@ -18,6 +19,7 @@ final public class ANActionSheet: UIView {
     private let borderLine: CGFloat = 1.0
     private let cornerRadius: CGFloat = 6.0
     private let animateDuration = 0.5
+    private let cancelIndex = -1
     
     private var delegate: ANActionSheetDelegate?
     private var actions = [ANAction]()
@@ -190,6 +192,11 @@ extension ANActionSheet: ANActionOutPut {
     func tappedButton(buttonIndex: Int) {
         guard let delegate = delegate else {
             dismiss()
+            return
+        }
+        
+        guard buttonIndex > cancelIndex else {
+            delegate.anActionSheetCancel?(self) ?? dismiss()
             return
         }
         

@@ -27,7 +27,7 @@ protocol ANActionOutPut {
 final public class ANAction: UIButton {
     
     var output: ANActionOutPut?
-    var index = 0
+    var index = -1
     var style: ANActionStyle = .Default {
         didSet {
             if style == .Cancel {

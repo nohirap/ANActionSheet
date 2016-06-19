@@ -53,10 +53,65 @@ class ViewController: UIViewController {
         actionSheet.addAction(cancelAction)
         
         actionSheet.show()
+        
+    }
+    
+    private func showActionSheetTypeDelegate() {
+        
+        let actionSheet = ANActionSheet(title: "Title", message: "Message!!!", delegate: self)
+        actionSheet.headerBackgroundColor = UIColor.blackColor()
+        actionSheet.titleColor = UIColor.redColor()
+        actionSheet.messageColor = UIColor.greenColor()
+        actionSheet.buttonsBorderColor = UIColor.blackColor()
+        let action1 = ANAction(title: "First Button", style: .Default)
+        action1.buttonColor = UIColor.redColor()
+        action1.labelNumberOfLines = 3
+        actionSheet.addAction(action1)
+        
+        let action2 = ANAction(title: "Second Button", style: .Default)
+        action2.buttonColor = UIColor.blueColor()
+        action2.labelColor = UIColor.greenColor()
+        actionSheet.addAction(action2)
+        
+        let action3 = ANAction(title: "Third Button\nThird Button\nThird Button\nThird Button\nThird Button\nThird Button", style: .Default)
+        action3.buttonColor = UIColor.yellowColor()
+        actionSheet.addAction(action3)
+        
+        let cancelAction = ANAction(title: "Cancel", style: .Cancel)
+        cancelAction.labelColor = UIColor.redColor()
+        actionSheet.addAction(cancelAction)
+        
+        actionSheet.show()
+        
     }
 
     @IBAction func onTouchDownShowButton(sender: AnyObject) {
         showActionSheet()
     }
+    
+    @IBAction func onTouchDownShowButtonTypeDelegate(sender: AnyObject) {
+        showActionSheetTypeDelegate()
+    }
+    
+}
+
+//MARK:- ANActionSheetDelegate
+extension ViewController: ANActionSheetDelegate {
+    
+    func anActionSheet(actionSheet: ANActionSheet, clickedButtonAtIndex buttonIndex: Int) {
+        switch buttonIndex {
+        case 0:
+            NSLog("Tap First Button!!!(delegate)")
+        case 1:
+            NSLog("Tap Second Button!!!(delegate)")
+        case 2:
+            NSLog("Tap Third Button!!!(delegate)")
+        default:
+            NSLog("?")
+        }
+        
+        actionSheet.dismiss()
+    }
+    
 }
 
