@@ -18,17 +18,26 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LfV-kG-bMO">
-                                <rect key="frame" x="235" y="285" width="130" height="30"/>
+                                <rect key="frame" x="235" y="170" width="130" height="30"/>
                                 <state key="normal" title="Show ActionSheet!"/>
                                 <connections>
                                     <action selector="onTouchDownShowButton:" destination="vXZ-lx-hvc" eventType="touchDown" id="RkH-54-Wbx"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lca-G5-WRE">
+                                <rect key="frame" x="200" y="300" width="200" height="30"/>
+                                <state key="normal" title="Show ActionSheet!(delegate)"/>
+                                <connections>
+                                    <action selector="onTouchDownShowButtonTypeDelegate:" destination="vXZ-lx-hvc" eventType="touchDown" id="Dnr-5a-ySY"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="LfV-kG-bMO" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="8gh-He-aV9"/>
-                            <constraint firstItem="LfV-kG-bMO" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="CPV-Ml-bSa"/>
+                            <constraint firstItem="Lca-G5-WRE" firstAttribute="top" secondItem="LfV-kG-bMO" secondAttribute="bottom" constant="100" id="OWE-kh-nXd"/>
+                            <constraint firstItem="Lca-G5-WRE" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="gzY-5u-3b7"/>
+                            <constraint firstItem="LfV-kG-bMO" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="150" id="rHE-7x-ldN"/>
                         </constraints>
                     </view>
                 </viewController>
