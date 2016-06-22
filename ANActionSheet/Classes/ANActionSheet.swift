@@ -80,17 +80,29 @@ final public class ANActionSheet: UIView {
         sheetView.frame = CGRectMake(0, UIScreen.height(), UIScreen.buttonWidth(), headerView.height + frameHeight)
         self.addSubview(sheetView)
         
-        UIView.animateWithDuration(animateDuration) {
-            self.sheetView.frame = CGRectOffset(self.sheetView.frame, 0, -self.sheetViewMoveY)
-        }
+        UIView.performSystemAnimation(.Delete,
+                                      onViews: [],
+                                      options: [],
+                                      animations: {
+                                        
+                                        self.sheetView.frame = CGRectOffset(self.sheetView.frame, 0, -self.sheetViewMoveY)
+                                      },
+                                      completion: nil)
     }
     
     public func dismiss() {
-        UIView.animateWithDuration(animateDuration, delay: 0.0, options: .CurveEaseOut, animations: {
-            self.sheetView.frame = CGRectOffset(self.sheetView.frame , 0, self.sheetViewMoveY)
-        }, completion: { (finished) in
-            self.removeFromSuperview()
-        })
+        
+        UIView.performSystemAnimation(.Delete,
+                                      onViews: [],
+                                      options: [],
+                                      animations: {
+                                        
+                                        self.sheetView.frame = CGRectOffset(self.sheetView.frame , 0, self.sheetViewMoveY)
+                                      },
+                                      completion: { _ in
+                                        
+                                        self.removeFromSuperview()
+                                      })
     }
     
     private func notExistDefaultButton() -> Bool {
