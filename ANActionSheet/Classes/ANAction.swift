@@ -26,6 +26,12 @@ protocol ANActionOutPut {
 
 final public class ANAction: UIButton {
     
+    override public var highlighted: Bool {
+        didSet {
+            self.alpha = (highlighted) ? 0.8 : 1.0
+        }
+    }
+    
     var output: ANActionOutPut?
     var index = -1
     var style: ANActionStyle = .Default {
