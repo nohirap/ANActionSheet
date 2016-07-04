@@ -17,30 +17,14 @@ internal final class ANHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(model: ANHeaderViewModel) {
+    public init(_ model: ANHeaderViewModel) {
         super.init(frame: CGRectZero)
         setupHeaderView(model)
     }
     
     private func setupHeaderView(model: ANHeaderViewModel) {
-        if !model.title.isEmpty {
-            let titleLabel = ANLabel()
-            titleLabel.type = .Title
-            titleLabel.color = model.titleColor
-            titleLabel.text = model.title
-            titleLabel.frame = CGRectMake(0, 0, UIScreen.buttonWidth(), titleHeight)
-            height += titleHeight
-            self.addSubview(titleLabel)
-        }
-        if !model.message.isEmpty {
-            let messageLabel = ANLabel()
-            messageLabel.type = .Message
-            messageLabel.color = model.messageColor
-            messageLabel.text = model.message
-            messageLabel.frame = CGRectMake(0, height, UIScreen.buttonWidth(), messageHeight)
-            height += messageHeight
-            self.addSubview(messageLabel)
-        }
+        setupLabel(.Title, color: model.titleColor, text: model.title, height: titleHeight)
+        setupLabel(.Message, color: model.messageColor, text: model.message, height: messageHeight)
         
         if height > 0 {
             self.frame = CGRectMake(UIScreen.mergin(), 0, UIScreen.buttonWidth(), height)
@@ -50,6 +34,20 @@ internal final class ANHeaderView: UIView {
             self.layer.mask = maskLayer
             self.backgroundColor = model.headerBackgroundColor
         }
+    }
+    
+    private func setupLabel(type: ANLabelType, color: UIColor, text: String, height: CGFloat) {
+        guard !text.isEmpty else {
+            return
+        }
+        
+        let label = ANLabel()
+        label.type = type
+        label.color = color
+        label.text = text
+        label.frame = CGRectMake(0, self.height, UIScreen.buttonWidth(), height)
+        self.height += height
+        self.addSubview(label)
     }
 
 }

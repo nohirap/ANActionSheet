@@ -70,7 +70,7 @@ final public class ANActionSheet: UIView {
             return
         }
         
-        let headerView = ANHeaderView(model: setupHeaderViewModel())
+        let headerView = ANHeaderView(setupHeaderViewModel())
         if headerView.height > 0 {
             sheetView.addSubview(headerView)
         }
